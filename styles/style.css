@@ -1,51 +1,417 @@
+/* ===== Шаг 0: Базовые стили и сброс ===== */
 *,
 *::before,
 *::after {
   box-sizing: border-box;
 }
 
-html {
-  block-size: 100%;
-}
-
 .page {
-  inline-size: 1200px;
-  block-size: 100%;
-  margin: auto;
-  color: #fff;
-  font-family: 'Fira Sans Condensed', sans-serif;
-  font-size: 18px;
-  background-color: #1b1919;
+  /* Базовые стили уже есть в заготовке, дополним при необходимости */
+  min-inline-size: 320px;
+  min-block-size: 100dvb;
+  margin: 0;
 }
 
-h1,
-h2,
-h3,
-h4,
-p,
-ul,
-ol,
-li,
-blockquote,
-fieldset {
+/* ===== Шаг 1: Лейаут ===== */
+.page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.content {
+  display: grid;
+  grid-template-areas:
+    "search-form search-form"
+    "list details";
+  grid-template-columns: minmax(400px, 1fr) minmax(300px, 2fr);
+  gap: 40px 20px;
+  max-inline-size: 1280px;
+  inline-size: 100%;
+  padding: 20px;
+  margin-block-start: 10px;
+  align-items: end;
+}
+
+/* Распределяем элементы по grid-областям */
+.search-form {
+  grid-area: search-form;
+}
+
+.content__list-container {
+  grid-area: list;
+  max-block-size: 700px;
+  overflow-y: auto;
+  padding-inline-end: 3px;
+}
+
+.content__details {
+  grid-area: details;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* ===== Шаг 2: Уточнение размеров ===== */
+.result__video-container {
+  position: relative;
+  inline-size: 100%;
+  block-size: 0;
+  padding-block-end: 56.25%; /* 16:9 aspect ratio */
+  margin-block-end: 16px;
+}
+
+.result__video {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+
+.content__list {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
   margin: 0;
   padding: 0;
-}
-
-ul,
-ol {
   list-style: none;
 }
 
-/* Кастомный скроллбар */
-.custom-scrollbar::-webkit-scrollbar {
-  width: 4px;
+.content__list-item {
+  padding-inline: 3px;
 }
 
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: rgb(217 217 217 / 10%);
+.content__video-card {
+  display: flex;
+  align-items: start;
+  gap: 16px;
 }
 
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background-color: #D9D9D9;
+.content__video-card-thumbnail {
+  inline-size: 200px;
+  block-size: 110px;
+  flex-shrink: 0;
+  object-fit: cover;
+  object-position: center;
+}
+
+.content__video-card-description-container {
+  flex-grow: 1;
+}
+
+/* ===== Шаг 3: Стили текстов ===== */
+.search-form__fieldset-title {
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 1.2;
+  margin-block-end: 16px;
+  padding: 0;
+}
+
+.title {
+  font-size: 40px;
+  line-height: 1.2;
+  margin-block-end: 16px;
+}
+
+.content__accent {
+  font-weight: 700;
+  color: #ff8c00;
+}
+
+.content__card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.content__video-card-title {
+  font-weight: 500;
+  font-size: 22px;
+  line-height: 1.2;
+  margin-block-end: 8px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.content__video-card-description {
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.2;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-origin: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ===== Шаг 4: Стили форм и их состояния ===== */
+.search-form {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  gap: 20px;
+}
+
+.search-form__fieldset {
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+.search-form__checkbox-list {
+  display: flex;
+  gap: 16px;
+}
+
+.search-form__label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: fit-content;
+  cursor: pointer;
+}
+
+/* Visually hidden для скрытия стандартных элементов */
+.visually-hidden {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Стилизация текстового поля */
+.search-form__text-input {
+  font-family: inherit;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: #000000;
+  background-color: #ffffff;
+  border: 1px solid #000000;
+  border-inline: none;
+  border-block: 1px solid #000000;
+  padding: 8px 12px;
+  inline-size: 300px;
+  appearance: none;
+}
+
+.search-form__text-input:focus {
+  outline: none;
+}
+
+.search-form__label:has(:focus-visible) {
+  outline: 2px solid #000000;
+  outline-offset: 2px;
+}
+
+/* Стилизация кастомного чекбокса */
+.search-form__pseudo-checkbox {
+  display: inline-block;
+  inline-size: 24px;
+  block-size: 24px;
+  border: 1px solid #000000;
+  background-color: #ffffff;
+  position: relative;
+}
+
+.search-form__checkbox:checked + .search-form__pseudo-checkbox::after {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  background-color: #000000;
+}
+
+/* Ховер для текста чекбокса */
+.search-form__label:hover .search-form__label-text {
+  text-decoration: underline;
+}
+
+/* ===== Шаг 5: Стилизуем кнопки ===== */
+.button {
+  font-family: inherit;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 1.2;
+  background-color: transparent;
+  border: 1px solid #000000;
+  cursor: pointer;
+  padding: 12px 24px;
+  transition: all 0.2s ease;
+}
+
+.button:hover {
+  text-decoration: underline;
+}
+
+.button:active {
+  background-color: #545050;
+  color: #ffffff;
+  border-color: #545050;
+}
+
+.button:focus {
+  outline: none;
+}
+
+.button:focus-visible {
+  outline: 2px solid #000000;
+  outline-offset: 2px;
+}
+
+.search-form__submit-button {
+  align-self: end;
+  padding: 8px 32px;
+}
+
+.more-button {
+  inline-size: 100%;
+  margin-block-start: 30px;
+}
+
+/* ===== Шаг 6: Состояния карточек ===== */
+.content__card-link {
+  transition: background-color 0.2s ease;
+}
+
+.content__card-link_current {
+  background-color: #545050;
+}
+
+.content__card-link_current .content__video-card-title,
+.content__card-link_current .content__video-card-description {
+  color: #ffffff;
+}
+
+.content__card-link:hover {
+  text-decoration: underline;
+}
+
+.content__card-link:active {
+  background-color: #545050;
+}
+
+.content__card-link:active .content__video-card-title,
+.content__card-link:active .content__video-card-description {
+  color: #ffffff;
+}
+
+.content__card-link:focus {
+  outline: none;
+}
+
+.content__card-link:focus-visible {
+  outline: 2px solid #000000;
+  outline-offset: 2px;
+}
+
+/* ===== Шаг 7: Кликабельность ===== */
+.button,
+.content__card-link,
+.search-form__label {
+  cursor: pointer;
+}
+
+/* ===== Шаг 8: Позиционирование прелоадеров ===== */
+.result__video-container {
+  position: relative;
+}
+
+.content__list-container {
+  position: relative;
+}
+
+/* Стили для прелоадера (уже есть в заготовке, дополняем) */
+.preloader {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(255, 255, 255, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+
+/* Стили для блока ошибки */
+.error {
+  position: absolute;
+  inset: 0;
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 20px;
+  z-index: 10;
+}
+
+.error__title {
+  font-size: 24px;
+  font-weight: 700;
+  margin-block-end: 16px;
+}
+
+.error__text {
+  font-size: 18px;
+  line-height: 1.4;
+}
+
+/* ===== Дополнительные стили для скроллбара (из заготовки) ===== */
+.content__list-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.content__list-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.content__list-container::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+.content__list-container::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Адаптивность для мобильных устройств */
+@media (max-width: 768px) {
+  .content {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "search-form"
+      "list"
+      "details";
+    gap: 30px;
+  }
+
+  .search-form {
+    flex-direction: column;
+  }
+
+  .search-form__text-input {
+    inline-size: 100%;
+  }
+
+  .content__list-container {
+    max-block-size: 400px;
+  }
+
+  .content__video-card {
+    flex-direction: column;
+  }
+
+  .content__video-card-thumbnail {
+    inline-size: 100%;
+    block-size: auto;
+  }
+
+  .search-form__checkbox-list {
+    flex-wrap: wrap;
+  }
 }
