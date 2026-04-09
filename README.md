@@ -18,6 +18,6 @@
 
 ## 🚀 Демо
 
-[Ссылка на GitHub Pages](https://levsvetel-cmyk.github.io/posmotri-v-okno-ad)
+[Ссылка на GitHub](git@github.com:levsvetel-cmyk/posmotri-v-okno-ad.git)
 
 ## 📁 Структура проекта
